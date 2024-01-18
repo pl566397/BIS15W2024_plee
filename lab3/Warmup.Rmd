@@ -1,0 +1,83 @@
+---
+title: "Warmup"
+author: "Pachia"
+date: "2024-01-18"
+output: html_document
+---
+## Warm Up
+1. Build a vector the includes the heights for five plants
+
+```{r}
+plant_1 <- 30.7
+plant_2 <- 37.6
+plant_3 <- 28.4
+plant_4 <- NA
+plant_5 <- 33.2
+```
+
+```{r}
+height_measurements <- c(plant_1, plant_2, plant_3, plant_4, plant_5) #plant height vector
+height_measurements
+```
+
+2. Build another vector the includes the mass measurements
+
+```{r}
+plant_1 <- 4
+plant_2 <- 37.6
+plant_3 <- 28.4
+plant_4 <- NA
+plant_5 <- 4.6
+```
+
+```{r}
+mass_measurements <- c(plant_1, plant_2, plant_3, plant_4, plant_5) #plant weight vector
+mass_measurements
+```
+
+3. Assemble these vectors into a labeled data matrix with two columns
+
+```{r}
+samples <- c("plant1", "plant2", "plant3", "plant4", "plant5")
+measurements <- c("height", "weight")
+```
+
+
+4. Combine data for height and weight
+
+```{r}
+plant_experiment <- c(height_measurements, mass_measurements)
+```
+
+5. Build a data matrix
+
+```{r}
+plant_experiment_matrix <- matrix(plant_experiment, nrow=5, byrow=F)#there is 5 observations so 5 rows #T= the data is being filled in left to right instead of top to bottom. F = top to bottom. #can specifiy the amount of rows or columns, but there's already 5 plants and two data measurements for each so row=5 will make it have 2 columns
+plant_experiment_matrix
+```
+6. Name column and rows
+
+```{r}
+colnames(plant_experiment_matrix) <- measurements
+rownames(plant_experiment_matrix) <- samples
+plant_experiment_matrix
+```
+
+7. calculate the meas of each column
+
+```{r}
+plant_means <- colMeans(plant_experiment_matrix, na.rm=T)
+plant_means
+```
+
+8. add this as a new row
+
+```{r}
+plant_experiment_matrix_final <- rbind(plant_experiment_matrix, plant_means)
+plant_experiment_matrix_final
+```
+
+
+
+
+
