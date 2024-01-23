@@ -1,0 +1,88 @@
+---
+title: "Lab4_WarmUP"
+author: "Pachia"
+date: "2024-01-23"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. In a new RMD doc, load tideverse and package called palmerpenguins
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+library(palmerpenguins)
+penguins
+```
+
+2. what are the dimensions of the dataset?
+
+```{r}
+dim(penguins)
+```
+
+3. What are the names of the variables(columns) in the `penguins` dataset?
+```{r}
+names(penguins)
+```
+
+```{r}
+glimpse(penguins)
+```
+
+
+4. How many individuals were sampled on each island in the `penguins` dataset?
+
+```{r}
+penguins <- penguins
+```
+
+```{r}
+table(penguins$island)
+```
+
+```{r}
+penguins$island
+```
+
+```{r}
+summary(penguins$island)
+```
+
+
+5. What is the mean body mass for all individuals in the `penguins` dataset?
+
+```{r}
+mean(penguins$body_mass_g, na.rm=T)#na.rm=T gets rid of NA's
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
