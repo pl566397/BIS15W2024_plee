@@ -1,11 +1,10 @@
 ---
-title: "Lab 4 Homework"
+title: "lab4_hw"
 author: "Pachia Lee"
-date: "`r Sys.Date()`"
+date: "2024-01-25"
 output:
-  html_document: 
-    theme: spacelab
-    keep_md: true
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -78,30 +77,3 @@ table(taxa$taxon)
 ```{r}
 table(homerange$trophic.guild)
 ```
-
-**7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
-```{r}
-
-```
-
-**8. Do herbivores or carnivores have, on average, a larger `mean.hra.m2`? Remove any NAs from the data.**  
-```{r}
-
-```
-
-```{r}
-
-```
-
-**9. Make a new dataframe `owls` that is limited to the mean mass, log10 mass, family, genus, and species of owls in the database. Which is the smallest owl? What is its common name? Do a little bit of searching online to see what you can learn about this species and provide a link below** 
-```{r}
-
-```
-
-**10. As measured by the data, which bird species has the largest homerange? Show all of your work, please. Look this species up online and tell me about it!**.  
-```{r}
-
-```
-
-## Push your final code to GitHub!
-Please be sure that you check the `keep md` file in the knit preferences.   
