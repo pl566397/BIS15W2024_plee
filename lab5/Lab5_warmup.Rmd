@@ -1,0 +1,49 @@
+---
+title: "lab5_warmup"
+author: "Pachia"
+date: "2024-01-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+##1. load the fish data
+
+```{r}
+getwd()
+```
+
+
+```{r}
+fish<- read.csv("data/gaeta_etal_CLC_data.csv")
+```
+
+2. transform fish data to include only variables lakeid and length
+```{r}
+select(fish, "lakeid", "length") #pulls out the columns only, it reshapes the dataframe and makes it small
+```
+
+3. filter the fish data to include only samples from lake BO
+
+```{r}
+glimpse(fish) #to see what lass lakeid is in
+```
+
+
+```{r}
+fish_bo<- filter(fish, lakeid == "BO") #filter, pulls out variables of interest from a dataframe
+```
+
+4. Calculate mean length of fish from lake BO
+
+```{r}
+mean(fish_bo$length)
+```
+
