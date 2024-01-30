@@ -96,14 +96,33 @@ mean(herbivores$mean.hra.m2)
 ```
 
 **9. Make a new dataframe `owls` that is limited to the mean mass, log10 mass, family, genus, and species of owls in the database. Which is the smallest owl? What is its common name? Do a little bit of searching online to see what you can learn about this species and provide a link below** all owls below to one 
+
 ```{r}
-owls <- select()
+select(homerange, "mean.mass.g", "log10.mass", "family", "genus", "species")
+owls <- filter(homerange, order=="strigiformes")
 ```
+
+```{r}
+filter(owls, mean.mass.g <= 64) #common name shown in the displayed graph
+```
+[Eurasian pygmy owl facts](https://animalia.bio/eurasian-pygmy-owl?letter=e)
+
 
 **10. As measured by the data, which bird species has the largest homerange? Show all of your work, please. Look this species up online and tell me about it!**.  
 ```{r}
-
+largest_homerange <- select(homerange, "mean.hra.m2", "species", "common.name", "class")%>%
+  arrange(desc(mean.hra.m2))%>%
+  filter(class=="aves")
+largest_homerange
 ```
+```{r}
+filter(largest_homerange, mean.hra.m2 > 230000000.00)
+```
+
+[Cheriway caracara facts](http://greglasley.com/content/BirdsofNorthAmerica/CrestedCaracara.php)
+
+The Cheriway caracara is also known as the mexican eagle. It usually feeds decaying animals but they also feed on snakes and lizards. They make raspy grunting when they are trying to vocalize their voice. During this vocalization, they tilt their heads so far up and back that their heads are eventually upside down behind their backs. 
+
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   
