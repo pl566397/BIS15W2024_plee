@@ -168,10 +168,8 @@ spider_man
 15. Can you find your hero in the superhero_info data? Show their info! 
 ```{r}
 superhero_info %>% 
-  select(name) %>% 
-  filter(name=="Spider-Man") %>% 
-  select_if(all)
+  filter(name=="Spider-Man")
 ```
 
 ## Push your final code to GitHub!
-Please be sure that you check the `keep md` file in the knit preferences.  
+Please be sure that you check the `keep md` file in the knit preferences. 
