@@ -1,11 +1,8 @@
 ---
-title: "Lab 7 Homework"
+title: "lab7_hw.md"
 author: "Pachia Lee"
-date: "`r Sys.Date()`"
-output:
-  html_document: 
-    theme: spacelab
-    keep_md: true
+date: "2024-02-05"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
