@@ -61,7 +61,7 @@ penguins %>%
 What if we are interested in the number of observations (penguins) by species and island?
 ```{r}
 penguins %>% 
-  group_by(species, island) %>% #only words with categorical variables
+  group_by(species, island) %>% #group_by() only works with categorical variables
   summarize(n=n(), .groups= 'keep')#the .groups argument here just prevents a warning message; n=n() means the number of observations; 
 ```
 
@@ -134,7 +134,7 @@ penguins %>%
 This is very helpful for continuous variables.
 ```{r}
 penguins %>%
-  summarize(across(contains("mm"), mean, na.rm=T)) #summaries across all the variables with mm
+  summarize(across(contains("mm"), mean, na.rm=T)) #summaries across all the variables with mm and remove NAs
 ```
 
 ```{r}

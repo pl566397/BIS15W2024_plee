@@ -76,7 +76,7 @@ fish %>% #work w/ fish data
   select(lakeid, radii_length_mm) %>% #pulls out variables of interest
   filter(lakeid=="AL" | lakeid== "AR") %>% #only these lakes
   filter(between(radii_length_mm, 2,4)) %>% #between 2 and 4
-  arrange(desc(radii_length_mm)) #sort to make easier to read
+  arrange(desc(radii_length_mm)) #sort 
 ```
 
 ## `arrange()`

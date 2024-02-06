@@ -53,7 +53,7 @@ filter(fish, length >= 350) #all the observations that are greater than or equal
 
 Using the `!` operator allows for the exclusion of specific observations.
 ```{r}
-filter(fish, lakeid != "AL")
+filter(fish, lakeid != "AL") #
 ```
 
 ```{r}
@@ -105,7 +105,7 @@ filter(fish, near(radii_length_mm, 2, tol = 0.2)) #look for radii length near 2 
 ## Using `filter()` on multiple conditions
 You can also use `filter()` to extract data based on multiple conditions. Below we extract only the fish that have lakeid "AL" and length >350.
 ```{r}
-filter(fish, lakeid == "AL" & length > 350)
+filter(fish, lakeid == "AL" & length > 350)#filter, fish data with lakeid =="AL" AND length>350
 ```
 
 Notice that the `|` operator generates a different result.
