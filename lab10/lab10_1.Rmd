@@ -178,7 +178,7 @@ homerange %>%
 homerange %>% 
   filter(family=="salmonidae") %>% 
   ggplot(aes(x=common.name, y=log10.mass))+
-  geom_bar(stat="identity")
+  geom_bar(stat="identity") #use geom bar only for counts  
 ```
 
 ## Practice
@@ -192,9 +192,9 @@ homerange_mammals<- homerange %>%
 ```{r}
 homerange %>% 
   filter(class=="mammalia") %>% 
-  count(trophic.guild) %>% #this way allows you to have count
+  count(trophic.guild) %>% #this way allows you to have count, also allows you to have an X and Y
   ggplot(aes(x=trophic.guild, y=n))+
-  geom_col()
+  geom_col()#use for when you have an X and Y
 ```
 
 
@@ -210,7 +210,7 @@ homerange %>%
   filter(class=="mammalia") %>% 
   top_n(-10, log10.mass) %>% #tells you the top 10 smallest animals
   ggplot(aes(x=common.name, y=log10.mass))+
-  geom_col()+
+  geom_col()+ #
   coord_flip()
 ```
 
