@@ -1,12 +1,13 @@
 ---
-title: "Homework 9"
+title: "hw9.md"
 author: "Pachia Lee"
-date: "`r Sys.Date()`"
-output:
-  html_document:
-    theme: spacelab
-    toc: no
+date: "2024-02-20"
+output: html_document
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
