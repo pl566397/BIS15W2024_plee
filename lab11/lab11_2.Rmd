@@ -173,7 +173,7 @@ homerange %>%
 I use `group` to make individual box plots for each taxon within class.
 ```{r}
 homerange %>% 
-  ggplot(aes(x = class, y = log10.mass, group = taxon)) + #use group to make indivodual box plots for each different axanomic group, cool but not hwlpful because we dont know what each box plot are, so use fill
+  ggplot(aes(x = class, y = log10.mass, group = taxon)) + #use group to make individual box plots for each different axanomic group, cool but not helpful because we dont know what each box plot are, so use fill
   geom_boxplot()
 ```
 

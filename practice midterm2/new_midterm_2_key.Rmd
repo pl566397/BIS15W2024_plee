@@ -156,6 +156,18 @@ homerange_mammals %>%
   ggplot(aes(x=trophic.guild)) + #don't need x= because there is only one variable
   geom_bar()
 
+##simple bar plot with labels
+homerange %>% 
+  ggplot(aes(x=taxon))+
+  geom_bar()+
+  coord_flip()+
+  labs(title="Observations by Taxon",
+       x="Taxonomic Group")
+
+
+
+
+
 #Bar graph: geom_bcol
 life_history %>% 
   count(order, sort=T) %>% #this is the same as arrange
@@ -209,6 +221,67 @@ ggplot(data=homerange, mapping=aes(x=log10.mass, y=log10.hra))+
 elephants %>% 
   ggplot(aes(x=sex, fill=sex))+ #fill is a grouping option, it is filling the bar by sex
   geom_bar()
+
+p+ geom_point(size=0.75) #point size by adjusting the size.
+
+p+geom_point(aes(color=thermoregulation), size=1.5) #coloring the dots based off of thermoregulation
+
+p+geom_point(aes(color=thermoregulation, shape=thermoregulation), size=1)#changes the shape of the different thermoregulations variables
+
+
+
+#Line Plots: Line plots are great when you need to show changes over time.
+deserts %>% 
+  filter(species_id=="DM" | species_id=="DF") %>% 
+  mutate(year=as.factor(year)) %>% #if you leave year as a numerical, R thinks you are going to do math with it, you don't add years
+  group_by(year, species_id) %>% 
+  summarize(n=n(), .groups = "keep") %>% 
+  pivot_wider(names_from=species_id, values_from = n)#makes the table more appealing and easier to understand
+
+deserts %>% 
+  filter(species_id=="DM" | species_id=="DS") %>% 
+  mutate(year=as.factor(year)) %>% #if you leave year as a numerical, R thinks you are going to do math with it, you don't add years
+  group_by(year, species_id) %>% 
+  summarize(n=n(), .groups = "keep") %>%
+  ggplot(aes(x=year, y=n, group=species_id, color=species_id))+
+  geom_line()+
+  geom_point(shape=2)+
+  theme(axis.text.x=element_text(angle=60, hjust=1))+ #hjust separtes it from the x axis
+  labs(title="Number of Samples for Species DM & DS",
+       x="year",
+       y="n")
+
+
+#Historgrams
+homerange %>% 
+  ggplot(aes(x = log10.mass)) +
+  geom_histogram(bins=20)+ #we can adjust the number of bins with the bins argument, can adjust the bin size bin=20 makes it wider
+  labs(title = "Distribution of Body Mass")
+
+homerange %>% 
+  ggplot(aes(x = log10.mass)) +
+  geom_histogram(color = "rosybrown2", fill = "lavenderblush1", bins=10)+
+  labs(title = "Distribution of Body Mass") #color =outline and fill =in the rectangle
+
+
+
+#Density Plot
+##makes a line plot and fills in the spaces of the lines
+homerange %>% 
+  ggplot(aes(x = log10.mass)) + #density is a probability distribution, show to distribution of continous variables very well
+  geom_density(fill="deepskyblue4", alpha  =0.3, color = "black")+ #alpha is the transparency, alpha creates transparency
+  labs(title = "Distribution of Body Mass") 
+
+
+##this adds a line onto the density plot and colors it red
+homerange %>% 
+  ggplot(aes(x=log10.mass)) + #plots are built in layers
+  geom_histogram(aes(y = after_stat(density)), fill = "deepskyblue4", alpha = 0.4, color = "black")+
+  geom_density(color = "red")+
+  labs(title = "Distribution of Body Mass")#have histogram with density plot overlays
+
+
+
 ```
 
 
@@ -228,6 +301,14 @@ life_history %>%
   coord_flip()+
   scale_y_log10()
 
+#scale_y_continuous: scales everything to a percentage/ looks mosaic 
+homerange %>% 
+  ggplot(aes(x = taxon, fill = trophic.guild))+
+  geom_bar(position = position_fill())+ 
+  scale_y_continuous(labels = scales::percent)+ #scaling everything to a percentage
+  coord_flip()
+
+
 #reorder: reorders the axis so that it is arranged in greatest to least
 life_history %>% 
   group_by(order) %>% #get your x
@@ -237,9 +318,103 @@ life_history %>%
   coord_flip()+
   scale_y_log10()
 
+#fill
+homerange %>% 
+  ggplot(aes(x=taxon, fill=trophic.guild))+ #color in the different trophic guild variables
+  geom_bar()+
+  coord_flip()+
+  labs(title="Observations by Taxon",
+       x="Taxonomic Group")
 
 
+#position dodge: separates the variables and show you a side by side graph
+homerange %>% 
+  ggplot(aes(x=taxon, fill=trophic.guild))+ #can fill by different variables
+  geom_bar(position="dodge")+ #use position=dodge so the bars are side by side and not stacked on top of each other
+  coord_flip()+
+  labs(title="Observations by Taxon",
+       x="Taxonomic Group")
+
+#group:use group to make individual box plots for each different taxanomic group, cool but not helpful because we dont know what each box plot are, so use fill
+homerange %>% 
+  ggplot(aes(x = class, y = log10.mass, group = taxon)) + 
+  geom_boxplot()
+
+#Ex: 
+homerange %>% 
+  ggplot(aes(x=class, y=log10.mass, group=taxon))+ #use group to group the taxon
+  geom_boxplot()+
+  coord_flip() #group by taxon but it will not color code
+
+
+#fill: filling in the taxon, colors in the box plot, "group" does  color in 
+homerange %>% 
+  ggplot(aes(x = class, y = log10.mass, fill=taxon)) +
+
+#Ex:
+homerange %>% 
+  ggplot(aes(x=class, y=log10.mass, fill=taxon))+
+  geom_boxplot()+
+  coord_flip() 
+  
+#alpha:alpha adds transparency in the plots so you can see the background
+  geom_boxplot(alpha=0.4) 
+  
+  
+#summary:
+summary(homerange$log10.mass) #gives min, mean, median, max
+
+#mutate: making categories for small, medium, large
+homerange %>% 
+  mutate(mass_category=case_when(log10.mass<=1.75~"small",
+                                 log10.mass>1.75 & log10.mass<=2.75 ~"medium",
+                                 log10.mass>2.75~"large")) #is going to be on midterm 2 to make
+#makes a new column called "mass_category" and the numerical values are going to be converted, like if it is smaller or equal to 1.75, it is considered in a category "small"
+
+homerange %>% 
+  mutate(mass_category=case_when(log10.mass<=1.75~"small",
+                                 log10.mass>1.75 & log10.mass<=2.75 ~"medium",
+                                 log10.mass>2.75~"large")) %>% 
+  ggplot(aes(x=mass_category, fill=trophic.guild))+
+  geom_bar(position="dodge")
+
+#how to plot the mutated columns
+
+#Ex: 
+#summary(log10.hra)
+
+##quartiles <- quantcut(homerange$log10.hra)
+##table()
+
+###homerange %>% 
+  ###mutate(range_category=case_when(log10.hra<3.65~"very small",
+                                  #log10.hra>=3.65 & log10.hra<=4.59~"small",
+                                  #log10.hra>4.59 & log10.hra<=6.02~"medium",
+                                  #log10.hra>6.02~"large"))
+
+####homerange %>% 
+  ####mutate(range_category=case_when(log10.hra<3.65~"very small",
+                                  #log10.hra>=3.65 & log10.hra<=4.59~"small",
+                                  #log10.hra>4.59 & log10.hra<=6.02~"medium",
+                                  #log10.hra>6.02~"large")) %>% 
+  #ggplot(aes(x=range_category, fill=class))+
+  #geom_bar(position="dodge", alpha=0.6, color="black")
+
+
+
+
+#Isolate the small `range_category` and plot the range of `log10.mass` by taxonomic class.
+homerange %>% 
+  mutate(range_category=case_when(log10.hra<3.65~"very small",
+                                  log10.hra>=3.65 & log10.hra<=4.59~"small",
+                                  log10.hra>4.59 & log10.hra<=6.02~"medium",
+                                  log10.hra>6.02~"large")) %>% 
+  filter(range_category=="small") %>% 
+  ggplot(aes(x=class, y=log10.mass, fill=class))+
+  geom_boxplot()
+#basically separating the small to "small" and "very small" and plotting it
 ```
+
 
 
 Aesthetics
@@ -248,16 +423,51 @@ Aesthetics
 labs(title="Elephant Age vs. Height", #this adds a title to the plot
        x="Age(years)", #what we want x axis to be called
        y="Height(cm)")
-
 #Themes
 ##Plot title
 theme(plot.title=element_text(size=rel(1.5),hjust=0.5)) #moved title to middle, rel= 1.5 bigger relative to the axis #hjust 0 makes title go to left, 1 makes title go to right, 0.5 makes title go to middle
+
+theme(axis.text.x=element_text(angle=45, hjust=1))+ #makes the x axis text at an angle
+  
+#can save plot as an object and then modify the themes using the object
+q <- homerange %>% 
+  ggplot(aes(x=log10.mass, y=log10.preymass, color=taxon))+ #fill will not work on a scatter plot so you have to use color
+  geom_point(na.rm=T)
+  
+#using object to change theme
+q+theme_classic()
+q+theme_minimal()
+
+theme_economist()+ #theme matches a certain publications
+  #ex:
+p + 
+  theme_economist()+ #theme matches a certain publications
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 60, hjust=0))+
+  labs(title = "Observations by Taxon in Homerange Data",
+       x = NULL,
+       y= "n",
+       fill= "Trophic Guild")
+
+#Color Brewers
+
 
 #Fill
 elephants %>% 
   ggplot(aes(x=sex, fill=sex))+ #fill is a grouping option, it is filling the bar by sex
   geom_bar()
 
+#Legends
+theme(legend.position = "left",#adjust the legend to the bottom, top, left, right
+        axis.text.x = element_text(angle = 60, hjust=1))
+#Ex:
+p+theme_linedraw()+ 
+  theme(legend.position = "left",#adjust the legend to the bottom, top, left, right
+        axis.text.x = element_text(angle = 60, hjust=1))+
+  labs(title = "Observations by Taxon in Homerange Data",
+       x = NULL, #x=null removes label name from x axis
+       y= "n",
+       fill= "Trophic Guild")
 
 
 ```
@@ -267,5 +477,7 @@ Libraries to Load
 library("tidyverse")
 library("skimr")
 library("janitor")
+library(ggthemes)
+
 ```
 
