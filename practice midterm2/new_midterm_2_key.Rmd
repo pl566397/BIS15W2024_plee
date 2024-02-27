@@ -1,0 +1,124 @@
+---
+title: "midterm_2_cheatsheet"
+author: "Pachia Lee"
+date: "2024-02-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading data
+```{r}
+cites <- read_csv("data/cites.csv") %>% clean_names()
+```
+
+##NAs
+```{r}
+#Removing NA
+penguins %>% 
+  group_by(island) %>% 
+  summarize(mean_body_mass_g=mean(body_mass_g, na.rm=T)) # remember to remove those NA's!
+
+#Summarizing the NAs in each variable through 'naniar'
+naniar::miss_var_summary(cites)
+
+#Visualize NAs with `visdat`
+library(visdat)
+
+vis_dat(life_history) #classes of data
+```
+
+
+```{r}
+#Count()/tabyl gives you the number of observations
+tabyl(island, species)
+
+penguins %>% 
+  count(island, species)
+```
+
+
+```{r}
+#Looking across data
+penguins %>%
+  summarize(across(c(species, island, sex), n_distinct))
+```
+
+
+```{r}
+#pivot_longer
+
+heartrate %>% 
+  pivot_longer(-patient, #patient will not move
+               names_to = "drug", #make a new column called "drug"
+               values_to="heartrate" #values moved to a new column called "heartrate"
+               )
+
+
+relig_income %>% 
+  pivot_longer(-religion, #religion will not move
+               names_to = "income", #make a new column called "income"
+               values_to="total" #values moved to a new column called "total"
+               )
+
+
+#range of columns you want to pivot
+billboard2 <- 
+  billboard %>% 
+  pivot_longer(wk1:wk76, # a range of columns from wk1 to wk76
+               names_to = "week",
+               values_to = "rank", 
+               values_drop_na = TRUE #this will drop the NA's
+               )
+billboard2
+
+
+#or specify which columns you don't want to include
+billboard3 <- 
+  billboard %>% 
+  pivot_longer(-c(artist, track, date.entered), #specific columns to stay fixed, so don't move these
+               names_to = "week",
+               values_to = "rank",
+               values_drop_na = TRUE
+               )
+billboard3 #produces same result
+
+
+#identify columns by a prefix, remove the prefix and all NA's.
+billboard %>% 
+   pivot_longer(
+   cols = starts_with("wk"), #columns that start with "wk"
+   names_to = "week",
+   names_prefix = "wk",
+   values_to = "rank",
+   values_drop_na = TRUE)
+
+#Use `pivot_longer()` to make the data tidy. Focus the data only on genotype, water_sched_prog, and greenhouse.  
+
+plant_data %>% 
+  pivot_longer(-c(genotype, water_sched_prog, greenhouse),
+               names_to = "days",
+               values_to = "values",
+               values_drop_na = T)
+
+
+#`names_sep` helps pull names apart
+```{r}
+qpcr_untidy %>% 
+  pivot_longer(
+    exp1_rep1:exp3_rep3, #colon to give range
+    names_to= c("experiment", "replicate"),#name it experiment and replicate
+    names_sep="_",#separate it with underscore
+    values_to="mRNA_expression")
+```
+
+
+Libraries to Load
+```{r message=FALSE, warning=FALSE}
+library("tidyverse")
+library("skimr")
+library("janitor")
+```
+

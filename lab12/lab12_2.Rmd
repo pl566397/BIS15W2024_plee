@@ -218,7 +218,7 @@ homerange %>%
 homerange %>% 
   ggplot(aes(x=taxon, y=log10.mass))+
   geom_boxplot()+
-  facet_grid(.~trophic.guild~thermoregulation)+#grid allows you to shape how you want it ".~" at thebeginning and at the end, added in thermoregulation
+  facet_grid(.~trophic.guild~thermoregulation)+#grid allows you to shape how you want it ".~" at the beginning and at the end, added in thermoregulation
   theme(axis.text.x = element_text(angle = 60, hjust=1))
 ```
 
