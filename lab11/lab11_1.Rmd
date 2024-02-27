@@ -155,7 +155,7 @@ elephants %>%
 There are lots of options for aesthetics. An aesthetic can be assigned to either numeric or categorical data. `fill` is a common grouping option; notice that an appropriate key is displayed when you use one of these options.
 ```{r}
 elephants %>% 
-  ggplot(aes(x=sex, fill=sex))+ #fill is a grouping option, itis filling the bar by sex
+  ggplot(aes(x=sex, fill=sex))+ #fill is a grouping option, it is filling the bar by sex
   geom_bar()
 ```
 
