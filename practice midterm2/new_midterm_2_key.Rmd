@@ -113,6 +113,18 @@ qpcr_untidy %>%
     names_to= c("experiment", "replicate"),#name it experiment and replicate
     names_sep="_",#separate it with underscore
     values_to="mRNA_expression")
+
+#pivot wider
+pivot_wider(names_from=species_id, values_from = n)#makes the table more appealing and easier to understand
+
+#ex:
+deserts %>% 
+  filter(species_id=="DM" | species_id=="DF") %>% 
+  mutate(year=as.factor(year)) %>% #if you leave year as a numerical, R thinks you are going to do math with it, you don't add years
+  group_by(year, species_id) %>% 
+  summarize(n=n(), .groups = "keep") %>% 
+  pivot_wider(names_from=species_id, values_from = n)#makes the table more appealing and easier to understand
+
 ```
 
 
