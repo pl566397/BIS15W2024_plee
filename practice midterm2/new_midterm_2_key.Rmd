@@ -2,7 +2,9 @@
 title: "midterm_2_cheatsheet"
 author: "Pachia Lee"
 date: "2024-02-27"
-output: html_document
+output: 
+  html_document: 
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -46,7 +48,7 @@ penguins %>%
   summarize(across(c(species, island, sex), n_distinct))
 ```
 
-
+Pivot
 ```{r}
 #pivot_longer
 
@@ -105,7 +107,6 @@ plant_data %>%
 
 
 #`names_sep` helps pull names apart
-```{r}
 qpcr_untidy %>% 
   pivot_longer(
     exp1_rep1:exp3_rep3, #colon to give range
@@ -114,6 +115,152 @@ qpcr_untidy %>%
     values_to="mRNA_expression")
 ```
 
+
+```{r}
+## Data Types
+#We first need to define some of the data types we will use to build plots.  
+
+#+ `discrete` quantitative data that only contains integers
+#+ `continuous` quantitative data that can take any numerical value
+#+ `categorical` qualitative data that can take on a limited number of values
+```
+
+
+ggplot
+```{r}
+#types of plots
+geom_boxplot() #helps us visualize categorical variable without having to use groupby
+geom_point()#makes a scatter plot
+geom_bar()#makes a bar graph
+geom_col()#helps you specify a bar graph with x&y
+
+#this tells you what is on the x-y axis
+ggplot(data=iris, #specify the data, data=iris
+       mapping=aes(x=Species, y=Petal.Length)) #map the aesthetics #what i want on the x is species, y is petal length 
+
+
+#Bar graph: geom_bar
+life_history %>% 
+  ggplot(aes(x=order))+ #x is counted as a categorical order
+  geom_bar()+
+  coord_flip()
+
+homerange %>% 
+  count(trophic.guild) #do a count first to show people the raw data
+
+homerange %>% 
+  ggplot(aes(x=trophic.guild)) + #don't need x= because there is only one variable
+  geom_bar() #good for counts
+
+homerange_mammals %>% 
+  ggplot(aes(x=trophic.guild)) + #don't need x= because there is only one variable
+  geom_bar()
+
+#Bar graph: geom_bcol
+life_history %>% 
+  count(order, sort=T) %>% #this is the same as arrange
+  ggplot(aes(x=order, y=n))+
+  geom_col()+
+  coord_flip()
+
+homerange %>% 
+  filter(family=="salmonidae") %>% #comparing a numerical data with categorical
+  select(common.name, log10.mass) %>% 
+  ggplot(aes(x=common.name, y=log10.mass))+ 
+  geom_col()+
+  coord_flip()#this flips the graph too
+
+
+##graph with geom_col and filter out NA's
+penguins %>% 
+  filter(sex!="NA") %>% #filter away NA sex 
+  group_by(sex) %>% 
+  summarize(average_bill_mm=mean(bill_length_mm)) %>% #this gives me an x and y
+  ggplot(aes(x=sex, y=average_bill_mm))+
+  geom_col()
+
+
+##making a plot and specifying a column
+homerange %>% 
+  filter(trophic.guild=="carnivore" & class=="mammalia") %>% 
+  select(family, trophic.guild, log10.mass) %>% 
+  ggplot(aes(x=family, y=log10.mass))+
+  geom_boxplot()+
+  coord_flip()
+
+##a bar_plot with mean mass
+life_history %>% 
+  group_by(order) %>% #get your x
+  summarize(mean_mass=mean(mass, na.rm=T)) %>% #gets your y
+  ggplot(aes(x=order, y=mean_mass))+
+  geom_col()+
+  coord_flip()
+
+
+
+
+#Scatter Plots
+#Adding a regression line/ linear regression line
+ggplot(data=homerange, mapping=aes(x=log10.mass, y=log10.hra))+
+  geom_point()+
+  geom_smooth(method=lm, se=T) #add a regression line with standard error
+
+#size of points on plot
+elephants %>% 
+  ggplot(aes(x=sex, fill=sex))+ #fill is a grouping option, it is filling the bar by sex
+  geom_bar()
+```
+
+
+Additions to ggplot
+```{r}
+geom_jitter() #adds some random noise to separate dots out a bit
+geom_bar(stat="identity")#stats means that each point will be plotted at the exact x and y values specified in the data
+options(scipen=999)#cancels scientific notation for the session 
+
+
+#scale_y_log10(): making a graph and scaling the y-axis on a log scale & overlooks outliers
+life_history %>% 
+  group_by(order) %>% #get your x
+  summarize(mean_mass=mean(mass, na.rm=T)) %>% #gets your y
+  ggplot(aes(x=order, y=mean_mass))+
+  geom_col()+
+  coord_flip()+
+  scale_y_log10()
+
+#reorder: reorders the axis so that it is arranged in greatest to least
+life_history %>% 
+  group_by(order) %>% #get your x
+  summarize(mean_mass=mean(mass, na.rm=T)) %>% #gets your y
+  ggplot(aes(x=reorder(order, mean_mass), y=mean_mass))+ 
+  geom_col()+
+  coord_flip()+
+  scale_y_log10()
+
+
+
+```
+
+
+Aesthetics
+```{r}
+##Labels
+labs(title="Elephant Age vs. Height", #this adds a title to the plot
+       x="Age(years)", #what we want x axis to be called
+       y="Height(cm)")
+
+#Themes
+##Plot title
+theme(plot.title=element_text(size=rel(1.5),hjust=0.5)) #moved title to middle, rel= 1.5 bigger relative to the axis #hjust 0 makes title go to left, 1 makes title go to right, 0.5 makes title go to middle
+
+#Fill
+elephants %>% 
+  ggplot(aes(x=sex, fill=sex))+ #fill is a grouping option, it is filling the bar by sex
+  geom_bar()
+
+
+
+```
 
 Libraries to Load
 ```{r message=FALSE, warning=FALSE}
