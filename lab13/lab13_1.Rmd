@@ -34,7 +34,7 @@ library("lubridate") #this will help us manage dates
 
 Now we can list all of the files in a directory. This is very helpful when you are working with multiple files at once. We can also get the full path names with `full.names = TRUE`.
 ```{r}
-files <- list.files(path = "data/spiders", pattern = ".csv", full.names = TRUE)
+files <- list.files(path = "data/spiders", pattern = ".csv", full.names = T) #how to upload multiple files together, full.names=T > gives full names, F gives names of files only
 files
 ```
 
@@ -42,36 +42,36 @@ Now we want to read each of these files into R without having to do them one at 
 
 Let's import our .csv files into a list. The `lapply()` function is a part of the `apply` family of functions. It will iterate over elements of an object, apply a function we specify, and return a list. We have a character vector of file paths, so we want to iterate over all the path names and apply `read_csv()`.  
 ```{r, message = FALSE}
-spider_list <- lapply(files, read_csv)
+spider_list <- lapply(files, read_csv) #look into files and apply a read csv to each
 ```
 
 We can view elements in our list with double brackets. Let's view the data for Butte county.
 ```{r}
-spider_list[[3]]
+spider_list[[3]] #can look at elements in the list, look at the 3rd element in the list
 ```
 
 ## Practice
 1. Getting an idea of the structure of lists is a bit tricky, especially when there are many elements. Try exploring the elements in `spider_list` using names(), str(), or glimpse(). For names(), you will need to specify an element using [[]].  
 ```{r}
-
+names(spider_list[[1]])#use double brackets to specify which dataset
 ```
 
 ## Naming List Elements
 We don't need to here, but for demonstration purposes we can name the elements in our list.  We want to keep the first element of each list element.
 ```{r}
-names <- list.files(path = "data/spiders", pattern = ".csv")
+names <- list.files(path = "data/spiders", pattern = ".csv") 
 names
 ```
 
 We will first get the names of each file, but we only want the county part. We will use `strsplit()` for that, which creates a nested list of strings.
 ```{r}
-names_list <- strsplit(names, split = " .csv")
+names_list <- strsplit(names, split = " .csv")#look at the files in this packet and add the names but separate names from " .csv"
 names_list
 ```
 
 We can then use `unlist()` to get a vector of the names.
 ```{r}
-names_vec <- unlist(names_list)
+names_vec <- unlist(names_list) #make a vector of all the names
 names_vec
 ```
 
@@ -84,14 +84,14 @@ names(spider_list)
 ## Practice
 1. Now that our list elements are named, how could we access the Butte County data by name?
 ```{r}
-
+butte<- spider_list[["Butte"]] #instead of using number, we can just use the name of county, put it in butte object so we can use it 
 ```
 
 ## Merging Files
 We are fortunate here in that all of our data frames have the same column names. This makes it easy to merge the data together with `bind_rows()` from `dplyr`. `bind_rows()` matches columns by name.
 ```{r}
-spiders_all <- bind_rows(spider_list)
-spiders_all
+spiders_all <- bind_rows(spider_list) #every single spider listed has a unique number, bindrows and combine all thoe 30 separate files into one
+spiders_all #now we see that everything is combined together nicely and neatly
 ```
 
 ## Joining Files
@@ -113,47 +113,52 @@ table_B
 
 The general syntax for joins is...
 ```{r}
-#join_type(firstTable, secondTable, by=columnTojoinOn)
+#join_type(firstTable, secondTable, by=columnTojoinOn) #we want to take both datasets and join tem together even though these datasets have different information, join first dataset, second data and by column
 ```
 
 `inner_join`  
 Where did customers 3 and 4 go?
 ```{r}
 inner_exampleDF <- inner_join(table_A, table_B, by="customer_ID")
-inner_exampleDF
+inner_exampleDF #customer 3 and 4 are gone after the join, because an interjoin only matches the observations for which all of the columns are present, and we are missing data for 3 and 4 so they are automatically dropped
 ```
 
 `left_join`
 Where did customer 4 go? Notice the missing data for customer 3.
 ```{r}
 left_exampleDF <- left_join(table_A, table_B, by="customer_ID")
-left_exampleDF
+left_exampleDF #left join, customer 4 is gone because it wasnt in the orginal left data, took the first table and matched the one syou can find from the right
 ```
 
 `right_join`
 Where did customer 3 go? Notice the missing data for customer 4.
 ```{r}
 right_exampleDF <- right_join(table_A, table_B, by="customer_ID")
-right_exampleDF
+right_exampleDF#right join does the same thing but customer 3 is dropped and we have missing data for 4, useful only deends on the data and the question you are trying to approach
 ```
 
 `full_join`
 ```{r}
 full_exampleDF <- full_join(table_A, table_B, by="customer_ID")
-full_exampleDF
+full_exampleDF#full join does not care for left or right, we have all customers but just have missing data for 3 and 4
 ```
 
 `anti_join`
 Provides the rows in the first table for which there are not matching values in the second table.
 ```{r}
 anti_exampleDF <- anti_join(table_A, table_B, by="customer_ID")
-anti_exampleDF
+anti_exampleDF#provide the rows in the first table, can use this to troubleshoot
 ```
 
 ## Joining the spider data
 Here, the latitude and longitude for each spider were recorded from the field records at a later date, and now we need to join it to our `spiders_all` data frame. The lat/long were recorded into one single file for each observation. Let's read in the lat/long data.
 ```{r, message = FALSE}
 spiders_locs <- read_csv("data/spiders locations/spiders_locations.csv")
+spiders_locs
+```
+
+```{r}
+spiders_all
 ```
 
 We will use a join here to merge lat/long to our data frame. Both files contain a unique identifier called `Accession` which we will use to join.  
@@ -161,7 +166,15 @@ We will use a join here to merge lat/long to our data frame. Both files contain 
 ## Practice
 1. Which type of join is most appropriate in this case?  
 ```{r}
+spiders_with_locs <- 
+  left_join(spiders_all, spiders_locs, by="Accession") #to spiders all, join spiders locs by the unie number Accesion, now we see that Lat. and Long. is joined, smush the new data onto the old data, you want to tag it onto the end of the old dataset so it has to be a left join
+summary(spiders_with_locs)
+```
 
+```{r}
+spiders_with_locs <- 
+  full_join(spiders_all, spiders_locs, by="Accession") #full join also works 
+summary(spiders_with_locs)
 ```
 
 As a side note, joining data can highlight problems or typos with the data when the join does not go as expected.  
@@ -171,14 +184,14 @@ We now have a single data frame with all of our spider data including locations.
 
 There is one last thing to change. Did you notice the date column? It seems to be in the format Day/Month/Year. 
 ```{r}
-#class(spiders_with_locs$Date)
-#glimpse(spiders_with_locs)
+class(spiders_with_locs$Date)
+glimpse(spiders_with_locs) #date is not looking at date as a numeric
 ```
 
 The `lubridate` package was specifically created to deal with dates of all types. There are many useful functions in `lubridate` for working with dates. Please see the excellent tutorial provided by [RichardOnData](https://www.youtube.com/watch?v=VYAo69WdJZg&ab_channel=RichardOnData).
 ```{r}
 day <- today()
-day
+day #storing today's date on as day
 ```
 
 ```{r}
@@ -186,13 +199,13 @@ str(day)
 ```
 
 ```{r}
-datetime <- now()
+datetime <- now() #tells you what time it is on this day
 datetime
 ```
 
 We want to change our date column to the standard "YEAR-MO-DA" format that R will recognize as a date. Right now it is listed as day-month-year. We can use the base R function `as.Date()` or the lubridate function `dmy` for this. 
 ```{r}
-#dmy(spiders_with_locs$Date)
+dmy(spiders_with_locs$Date) #dmy converts slashes into a date that R can read, anytime there is a weird format, though it is going to erase the date and put an NA there
 ```
 
 There are many different options for working with dates and datetimes in lubridate including `ymd`, `mdy`, `dmy`, `mdy_hms`, `ymd_hms`.
@@ -201,35 +214,35 @@ dateformat1 <- "20200922"
 dateformat2 <- "09-22-2020"
 dateformat3 <- "22/09/2020"
 dateformat4 <- "09-22-2020 17:00:00"
-dateformat5 <- "20200922 170000"
+dateformat5 <- "20200922 170000" #can adjust the format
 ```
 
 ## Practice 
 1. Convert each of the examples above using lubridate.
 ```{r}
-
+ymd(dateformat1)
 ```
 
 ```{r}
-
+mdy(dateformat2)
 ```
 
 ```{r}
-
+dmy(dateformat3)
 ```
 
 ```{r}
-
+mdy_hms(dateformat4)
 ```
 
 ```{r}
-
+ymd_hms(dateformat5)
 ```
 
 ## Export for part 2  
 We need to save our final data to a `.csv` so we can use it in part 2. 
 ```{r}
-#write.csv(spiders_with_locs, file = "spiders_with_locs.csv", row.names = FALSE)
+write.csv(spiders_with_locs, file = "spiders_with_locs.csv", row.names = FALSE)
 ```
 
 ## That's it, let's take a break!   

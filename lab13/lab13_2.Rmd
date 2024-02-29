@@ -38,7 +38,7 @@ Because some of these maps are proprietary, you will need and API key to use the
 
 Start by making an account with [Stadia Maps](https://client.stadiamaps.com/signup/). You need to add a "property" which is just a name for your project. Once you have an account, you can get an API key. Use the following code to register your key.  
 ```{r}
-register_stadiamaps("e77f55a8-a371-44cd-a7dd-6384b4586d64", write = FALSE)
+register_stadiamaps("e77f55a8-a371-44cd-a7dd-6384b4586d64", write = FALSE) #sign up for your own stadia maps
 ```
 
 ## Load the Data
@@ -61,24 +61,24 @@ We set the bounding box to a little outside our min and max locations with `f = 
 ```{r}
 spiders %>% 
   select(latitude, longitude) %>% 
-  summary()
+  summary()#where on earth we want to orient our map, this gives us a min and a max, its helpful because now we need to tell the ggmap program what our ranges are
 ```
 
 Now we set the bounding box. We use the min and max values for latitude and longitude to set the range.  
 ```{r}
-lat <- c(34.67, 41.80)
-long <- c(-124.1, -115.5)
-bbox <- make_bbox(long, lat, f = 0.03) #f is the fraction of the bounding box to add to the range
+lat <- c(34.67, 41.80)#the min and max for lat
+long <- c(-124.1, -115.5)#the min and max for lat
+bbox <- make_bbox(long, lat, f = 0.03) #f is the fraction of the bounding box to add to the range, f is the fraction of the bbox, this program is very sensitive, so start at 0.03
 ```
 
 Let's get a base map for our bounding box area. There are several different map [styles](https://docs.stadiamaps.com/themes/)
 ```{r}
-map1 <- get_stadiamap(bbox, maptype = "stamen_terrain", zoom=7)
+map1 <- get_stadiamap(bbox, maptype = "stamen_terrain", zoom=7) #get stamen map, use bbox to make map, very senitive t zoom so keep it at zoom=7
 ```
 
 Have a look at the map.  
 ```{r}
-ggmap(map1)
+ggmap(map1) #the map we made above
 ```
 
 ## Adding Points to Base Map
@@ -86,7 +86,7 @@ ggmap(map1)
 ```{r}
 ggmap(map1) + 
   geom_point(data = spiders, aes(longitude, latitude), size=0.4) +
-  labs(x= "Longitude", y= "Latitude", title="Spider Locations")
+  labs(x= "Longitude", y= "Latitude", title="Spider Locations")#take the lat and long and put it on the map, use ggmap+geom_point, data=spiders, aes x and y) you end up with a map with all the spiders that are collected
 ```
 
 ## Practice
@@ -105,46 +105,59 @@ sharks_dups <- sharks %>%
 ```
 
 ```{r}
-
+sharks_dups %>% 
+  select(latitude, longitude) %>% 
+  summary()
 ```
 
 ```{r}
-
+lat <- c(32.59, 41.56)#the min and max for lat
+long <- c(-124.7, -117.1)#the min and max for lat
+bbox <- make_bbox(long, lat, f = 0.03)
 ```
 
 2. Load a map from `stamen` in a terrain style projection and display the map.
 ```{r}
-
+map_sharks <- get_stadiamap(bbox, maptype = "stamen_terrain", zoom=7)
 ```
 
 ```{r}
-
+ggmap(map_sharks)
 ```
 
 3. Build a map that overlays the recorded observations of shark attacks in California.
 ```{r}
-
+ggmap(map_sharks) + 
+  geom_point(data = sharks_dups, aes(longitude, latitude), size=0.3) +
+  labs(x= "Longitude", y= "Latitude", title="Shark Locations")
 ```
 
 4. What if you only wanted to map the fatalities?
 ```{r}
-
+sharks_fatal<- sharks_dups %>% 
+  filter(injury=="fatal") %>% 
+  select(latitude, longitude) %>% 
+  summary()
 ```
 
 ```{r}
-
+lat <- c(32.85, 39.58)#the min and max for lat
+long <- c(-123.8, -117.3)#the min and max for lat
+bbox <- make_bbox(long, lat, f = 0.03)
 ```
 
 ```{r}
-
+map_fatal <- get_stadiamap(bbox, maptype = "stamen_terrain", zoom=7)
 ```
 
 ```{r}
-
+ggmap(map_fatal)
 ```
 
 ```{r}
-
+#ggmap(map_fatal) + 
+  #geom_point(data= sharks_fatal, aes(longitude, latitude), size=0.8) +
+  labs(x= "Longitude", y= "Latitude", title="Fatal Shark Attack Locations")
 ```
 
 ## Wrap-up  
