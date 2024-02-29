@@ -148,7 +148,7 @@ white_sharks %>%
 white_sharks%>% 
   filter(sex!="NA") %>% 
   ggplot(aes(x=sex, y=total_length_cm))+
-  geom_col()+
+  geom_boxplot()+ #box plots compare ranges 
   labs(title="Range of Total Length by Sex")
 ```
 
